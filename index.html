@@ -1,0 +1,512 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Lawrence Feng</title>
+<meta name="description" content="Portfolio of Lawrence Feng — projects, writing and the things buried in between.">
+<meta name="theme-color" content="#0d0f1f">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M8 1l7 7-7 7-7-7z' fill='%23ffb35c'/%3E%3C/svg%3E">
+<link rel="alternate" type="application/atom+xml" title="Lawrence Feng" href="https://lawrnsfeng.github.io/atom.xml">
+<style>:root{
+  --night:#0d0f1f;--night-2:#1c1a31;--sand-0:#17120f;--sand-1:#2e231c;--sand-2:#4a372a;
+  --lantern:#ffb35c;--teal:#4fb3a5;--coral:#d9735b;--ivory:#ece4d4;--muted:#a79d8e;
+  --line:rgba(236,228,212,.16);--glass:rgba(13,15,31,.8);
+  --serif:ui-serif,"Iowan Old Style","Palatino Linotype",Palatino,Georgia,serif;
+  --sans:ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  --chamfer:polygon(12px 0,100% 0,100% calc(100% - 12px),calc(100% - 12px) 100%,0 100%,0 12px);
+  color-scheme:dark;
+}
+*,*::before,*::after{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--night);color:var(--ivory);font:16px/1.65 var(--sans)}
+a{color:var(--lantern);text-underline-offset:.2em;text-decoration-thickness:1px}
+a:hover{color:#ffd29a}
+:focus-visible{outline:2px solid var(--lantern);outline-offset:3px}
+h1,h2,h3{font-family:var(--serif);font-weight:500;line-height:1.2;letter-spacing:.01em}
+.ornament{width:4rem;height:4rem;color:var(--teal);display:block}
+.ornament-wrap{display:block;margin:0 0 1rem}
+figure{margin:1.5rem 0}figure img{max-width:100%;height:auto;display:block}
+figcaption{color:var(--muted);font-size:.875rem;margin-top:.5rem}
+.visually-hidden{position:absolute!important;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+
+/* ---------- landing ---------- */
+body.home{height:100vh;height:100dvh;overflow:hidden;overscroll-behavior:none}
+#stage{position:fixed;inset:0;background:var(--night)}
+#stage .poster{position:absolute;inset:0;width:100%;height:100%;display:block}
+#dream{position:absolute;inset:0;width:100%;height:100%;display:block;opacity:0;transition:opacity 1.2s ease;touch-action:none}
+.dream-live #dream{opacity:1}
+.sign{position:fixed;top:0;left:0;padding:20px 24px;pointer-events:none;max-width:70vw}
+.sign h1{margin:0;font-size:clamp(1.15rem,2.4vw,1.6rem);letter-spacing:.14em;text-transform:uppercase}
+.sign p{margin:.15rem 0 0;color:var(--muted);font-size:.9rem;letter-spacing:.06em}
+#prompt{position:fixed;left:50%;bottom:max(28px,env(safe-area-inset-bottom));width:max-content;transform:translateX(-50%);margin:0;
+  padding:.5rem 1rem;font-size:.9rem;letter-spacing:.06em;color:var(--ivory);background:rgba(13,15,31,.55);
+  clip-path:var(--chamfer);pointer-events:none;text-align:center;max-width:calc(100vw - 32px);transition:opacity .6s}
+#prompt:empty{opacity:0}
+#crosshair{position:fixed;left:50%;top:50%;width:8px;height:8px;margin:-4px 0 0 -4px;border:1px solid rgba(255,211,154,.8);
+  transform:rotate(45deg);pointer-events:none;opacity:0;transition:opacity .3s}
+.locked #crosshair{opacity:1}
+.stick{position:fixed;width:96px;height:96px;margin:-48px 0 0 -48px;border:1px solid rgba(236,228,212,.3);border-radius:50%;
+  pointer-events:none;display:none}
+.stick i{position:absolute;left:50%;top:50%;width:36px;height:36px;margin:-18px 0 0 -18px;border-radius:50%;background:rgba(255,179,92,.35)}
+
+/* Save me */
+/* Corner: help + Save me */
+.corner{position:fixed;top:14px;right:14px;z-index:5;display:flex;gap:8px;align-items:flex-start}
+.corner>details>summary{list-style:none;cursor:pointer;display:flex;gap:.5rem;align-items:center;padding:.55rem 1rem;
+  background:var(--glass);border:0;color:var(--ivory);font:600 .85rem/1 var(--sans);letter-spacing:.12em;text-transform:uppercase;
+  clip-path:var(--chamfer);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px)}
+.corner>details>summary::-webkit-details-marker{display:none}
+#save-me>summary::before{content:"";width:8px;height:8px;background:var(--lantern);transform:rotate(45deg)}
+.corner>details[open]>summary{background:var(--lantern);color:var(--night)}
+#help>summary{width:2.3rem;justify-content:center;padding:.55rem 0;font-size:.95rem}
+#save-me[open]>summary::before{background:var(--night)}
+.panel{position:absolute;right:0;top:calc(100% + 8px);width:min(360px,calc(100vw - 28px));max-height:calc(100dvh - 90px);overflow:auto;
+  padding:1.1rem 1.25rem 1.25rem;background:var(--glass);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);clip-path:var(--chamfer)}
+.panel h2{font-size:.75rem;font-family:var(--sans);font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);margin:1rem 0 .4rem}
+.panel h2:first-child{margin-top:0}
+.panel ul{list-style:none;margin:0;padding:0}
+.panel li a,.panel li button{display:block;width:100%;text-align:left;padding:.4rem 0;color:var(--ivory);text-decoration:none;
+  border:0;border-bottom:1px solid var(--line);background:none;font:inherit;cursor:pointer}
+.panel li a:hover,.panel li button:hover{color:var(--lantern)}
+.panel li small{display:block;color:var(--muted);font-size:.8rem;line-height:1.3}
+#journal:empty::before{content:"Nothing found yet.";color:var(--muted);font-size:.875rem}
+
+/* Vision */
+#vision{border:0;padding:0;background:transparent;color:var(--ivory);max-width:min(520px,calc(100vw - 32px));width:100%}
+#vision::backdrop{background:rgba(6,7,18,.6);-webkit-backdrop-filter:blur(3px);backdrop-filter:blur(3px)}
+#vision .card{position:relative;padding:1.75rem 1.75rem 1.5rem;background:linear-gradient(160deg,#1f1b33,#141225);clip-path:var(--chamfer);
+  max-height:calc(100dvh - 48px);overflow:auto}
+#vision .card::before{content:"";position:absolute;inset:0 0 auto;height:3px;background:linear-gradient(90deg,var(--teal),var(--lantern),var(--coral))}
+#vision h2{margin:0 0 .75rem;font-size:1.6rem}
+#vision .where{margin:0 0 .25rem;color:var(--muted);font-size:.75rem;letter-spacing:.16em;text-transform:uppercase}
+#vision .go{display:inline-block;margin-top:1rem;padding:.55rem 1rem;background:var(--lantern);color:var(--night);text-decoration:none;
+  font-weight:600;clip-path:var(--chamfer)}
+#vision .close{position:absolute;top:.6rem;right:.8rem;background:none;border:0;color:var(--muted);font-size:1.5rem;cursor:pointer;line-height:1}
+#vision .close:hover{color:var(--ivory)}
+
+/* Welcome */
+#welcome{border:0;padding:0;background:transparent;color:var(--ivory);max-width:min(440px,calc(100vw - 32px));width:100%}
+#welcome::backdrop{background:rgba(6,7,18,.35)}
+#welcome .card{position:relative;padding:1.75rem 1.75rem 1.5rem;background:linear-gradient(160deg,rgba(31,27,51,.94),rgba(20,18,37,.94));clip-path:var(--chamfer)}
+#welcome .card::before{content:"";position:absolute;inset:0 0 auto;height:3px;background:linear-gradient(90deg,var(--teal),var(--lantern),var(--coral))}
+#welcome h2{margin:0 0 .75rem;font-size:1.5rem}
+#welcome p{margin:0 0 .75rem;color:var(--muted)}
+#welcome .how{font-size:.85rem}
+#welcome .choices{display:flex;flex-wrap:wrap;gap:.6rem;margin-top:1.25rem}
+#welcome button{font:600 .95rem var(--sans);padding:.6rem 1.1rem;border:0;cursor:pointer;clip-path:var(--chamfer)}
+#welcome .explore{background:var(--lantern);color:var(--night)}
+#welcome .save{background:rgba(236,228,212,.1);color:var(--ivory)}
+#welcome .save small{display:block;font-weight:400;font-size:.75rem;color:var(--muted)}
+
+/* ---------- sub-pages ---------- */
+body.page{min-height:100vh;background:linear-gradient(180deg,var(--night) 0,var(--night-2) 70vh,var(--sand-0) 100%) fixed}
+.topbar{display:flex;align-items:center;justify-content:space-between;gap:1rem;flex-wrap:wrap;max-width:46rem;margin:0 auto;padding:1.25rem 1.25rem 0}
+.topbar .mark{display:flex;align-items:center;gap:.6rem;color:var(--ivory);text-decoration:none;font-family:var(--serif);letter-spacing:.14em;text-transform:uppercase;font-size:.95rem}
+.topbar .mark::before{content:"";width:9px;height:9px;background:var(--lantern);transform:rotate(45deg)}
+.topbar nav{display:flex;gap:1.1rem;flex-wrap:wrap;font-size:.9rem}
+.topbar nav a{color:var(--muted);text-decoration:none}
+.topbar nav a:hover,.topbar nav a[aria-current]{color:var(--ivory)}
+main.prose{max-width:46rem;margin:0 auto;padding:2.5rem 1.25rem 5rem}
+main.prose h1{font-size:clamp(2rem,5vw,2.8rem);margin:0 0 .5rem}
+main.prose .lede{color:var(--muted);margin:0 0 2rem;font-size:1.05rem}
+main.prose h2{margin-top:2.5rem;font-size:1.4rem}
+.cards{list-style:none;padding:0;margin:2rem 0;display:grid;gap:1px;background:var(--line)}
+.cards li{background:var(--night)}
+.cards a{display:block;padding:1.1rem 1.25rem;text-decoration:none;color:var(--ivory)}
+.cards a:hover{background:#15142a}
+.cards strong{font-family:var(--serif);font-weight:500;font-size:1.2rem}
+.cards span{display:block;color:var(--muted);font-size:.9rem}
+.meta{color:var(--muted);font-size:.9rem}
+footer.foot{max-width:46rem;margin:0 auto;padding:0 1.25rem 2.5rem;color:var(--muted);font-size:.85rem;display:flex;flex-wrap:wrap;gap:1rem;justify-content:space-between;align-items:center}
+@media (max-width:600px){ #prompt{font-size:.8rem;bottom:max(20px,env(safe-area-inset-bottom))}.sign{padding:16px;max-width:calc(100vw - 190px)}.sign h1{font-size:.95rem;letter-spacing:.1em}.sign p{font-size:.8rem}}
+
+/* Help */
+.steps{list-style:none;margin:0;padding:0;counter-reset:s}
+.steps li{display:grid;grid-template-columns:64px 1fr;gap:.75rem;align-items:center;padding:.55rem 0;border-bottom:1px solid var(--line)}
+.steps svg{width:64px;height:40px;fill:none;stroke:var(--ivory);stroke-width:1.4;stroke-linecap:round;stroke-linejoin:round}
+.steps svg .fill{fill:var(--lantern);stroke:none}.steps svg .fill-soft{fill:rgba(79,179,165,.35);stroke:var(--teal)}
+.steps svg .glow{fill:rgba(255,179,92,.28);stroke:none}
+.steps svg text{fill:var(--ivory);stroke:none;font:600 8px var(--sans);text-anchor:middle}
+.steps p,.lore li{margin:0;font-size:.875rem;line-height:1.45;color:var(--muted)}
+.steps b,.lore b{color:var(--ivory);font-weight:600}
+kbd{display:inline-block;min-width:1.4em;padding:0 .3em;margin:0 .1em;border:1px solid var(--line);border-bottom-width:2px;font:600 .75rem/1.4 var(--sans);text-align:center;color:var(--ivory)}
+.lore{list-style:none;margin:.75rem 0 0;padding:0;display:grid;gap:.5rem}
+.lore li{display:grid;grid-template-columns:14px 1fr;gap:.6rem;align-items:start;margin:0;font-size:.875rem;line-height:1.45;color:var(--muted)}
+.lore p{margin:0}
+.lore span{width:10px;height:10px;margin-top:.35em;transform:rotate(45deg)}
+.lore .beam{background:linear-gradient(var(--lantern),transparent);transform:none;width:4px;height:16px;margin:0 3px}
+.lore .glint{background:#ffe2b0;box-shadow:0 0 6px #ffb35c}.lore .still{border:1.5px solid var(--teal)}.lore .storm{background:#6b5040}.lore .map{border:1.5px solid var(--ivory);border-radius:50%;transform:none}
+.only-touch{display:none}
+@media (pointer:coarse){.only-touch{display:revert}.only-mouse{display:none}}
+.seg{display:flex;gap:1px;background:var(--line)}
+.seg button{flex:1;padding:.5rem .4rem;border:0;background:var(--night);color:var(--muted);font:600 .8rem var(--sans);cursor:pointer}
+.seg button[aria-pressed=true]{background:var(--lantern);color:var(--night)}
+
+/* Redacted list */
+.redacted{display:flex;flex-wrap:wrap;gap:.4ch;padding:.45rem 0 .15rem}
+.redacted i{display:block;height:.95em;background:#050409;box-shadow:inset 0 0 0 1px rgba(236,228,212,.08)}
+#hidden li{border-bottom:1px solid var(--line);padding-bottom:.35rem}
+#hidden li small{color:var(--muted);font-size:.8rem}
+#hidden li button{padding-bottom:.1rem;border:0}
+
+/* Dig meter */
+#dig{position:fixed;left:50%;bottom:calc(max(28px,env(safe-area-inset-bottom)) + 3.1rem);width:180px;height:4px;margin-left:-90px;
+  background:rgba(236,228,212,.15);opacity:0;transition:opacity .3s;pointer-events:none;clip-path:polygon(4px 0,100% 0,calc(100% - 4px) 100%,0 100%)}
+#dig.on{opacity:1}
+#dig i{display:block;height:100%;width:calc(var(--p,0) * 100%);background:linear-gradient(90deg,var(--teal),var(--lantern))}
+
+/* Debug panel (?debug) */
+#debug{position:fixed;left:12px;top:92px;z-index:6;width:min(300px,calc(100vw - 24px));max-height:calc(100dvh - 170px);overflow:auto;
+  background:rgba(8,9,20,.88);color:var(--ivory);font:12px/1.4 ui-monospace,SFMono-Regular,Menlo,monospace;border:1px solid var(--line)}
+#debug>summary{cursor:pointer;padding:.4rem .6rem;color:var(--teal);font-weight:700;letter-spacing:.1em;text-transform:uppercase}
+#debug .dbg{padding:0 .6rem .6rem}
+#debug p{margin:0 0 .4rem;color:var(--muted);word-break:break-word}
+#debug .row{display:flex;flex-wrap:wrap;gap:4px;align-items:center;margin:.3rem 0}
+#debug .row b{color:var(--muted);font-weight:400;margin-right:2px}
+#debug button{font:inherit;padding:.2rem .45rem;background:#1a1a30;color:var(--ivory);border:1px solid var(--line);cursor:pointer}
+#debug button:hover{border-color:var(--teal)}
+#debug button[aria-pressed=true]{background:var(--teal);color:var(--night)}
+#debug h3{font:700 11px/1 ui-monospace,monospace;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:.8rem 0 .3rem}
+#debug ul{list-style:none;margin:0;padding:0}
+#debug li{display:flex;gap:4px;align-items:center;padding:.15rem 0;border-bottom:1px solid var(--line)}
+#debug li span{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+#debug li small{color:var(--muted);margin-left:.4em}
+
+/* Touch: a faint ring marking where the walk stick lives (left half of the screen). */
+.move-zone{display:none;position:fixed;left:max(28px,env(safe-area-inset-left));bottom:calc(max(28px,env(safe-area-inset-bottom)) + 70px);
+  width:84px;height:84px;border:1px dashed rgba(236,228,212,.28);border-radius:50%;pointer-events:none;transition:opacity .3s}
+.move-zone span{position:absolute;inset:0;display:grid;place-items:center;font:600 .65rem var(--sans);letter-spacing:.14em;text-transform:uppercase;color:rgba(236,228,212,.4)}
+@media (pointer:coarse){ .exploring .move-zone{display:block} }
+.moving .move-zone{opacity:0}
+
+/* Minimap + full map */
+#minimap{display:none;position:fixed;right:18px;bottom:18px;width:150px;height:150px;border-radius:50%;cursor:pointer;
+  box-shadow:0 0 0 1px rgba(236,228,212,.22),0 0 0 4px rgba(13,15,31,.6)}
+.exploring #minimap{display:block}
+@media (max-width:600px){ #minimap{width:104px;height:104px;right:14px;bottom:auto;top:66px} }
+#bigmap{position:fixed;inset:0;z-index:8;display:grid;place-items:center;background:rgba(5,5,12,.72);-webkit-backdrop-filter:blur(3px);backdrop-filter:blur(3px)}
+#bigmap[hidden]{display:none}
+.bigmap-card{width:min(92vw,86vh,760px);clip-path:var(--chamfer);background:#0b0b16}
+.bigmap-card canvas{display:block;width:100%;aspect-ratio:1}
+.bigmap-bar{display:flex;gap:6px;align-items:center;padding:.5rem .75rem;font-size:.8rem;color:var(--muted)}
+.bigmap-bar span{flex:1}
+.bigmap-bar button{font:600 .85rem var(--sans);min-width:2.2rem;padding:.35rem .6rem;border:0;background:#1d1c33;color:var(--ivory);cursor:pointer}
+.bigmap-bar button:hover{background:var(--lantern);color:var(--night)}
+
+/* Ko-fi */
+a.kofi{display:inline-flex;align-items:center;gap:.5rem;padding:.55rem .95rem;background:var(--lantern);color:var(--night);font:600 .9rem var(--sans);
+  text-decoration:none;clip-path:var(--chamfer)}
+a.kofi:hover{background:#ffd29a;color:var(--night)}
+a.kofi .cup{width:1.15rem;height:1.15rem}
+.panel a.kofi{margin:.2rem 0 .3rem}
+</style>
+</head>
+
+
+
+<body class="home">
+<div id="stage">
+  <svg class="poster" viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid slice" aria-hidden="true" focusable="false">
+<defs><linearGradient id="sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#06071a"/><stop offset=".55" stop-color="#15142c"/><stop offset=".64" stop-color="#2a2238"/></linearGradient>
+<radialGradient id="moonglow"><stop offset="0" stop-color="#cfd6ff" stop-opacity=".22"/><stop offset="1" stop-color="#cfd6ff" stop-opacity="0"/></radialGradient>
+<radialGradient id="lamp" cx=".5" cy="1" r=".6"><stop offset="0" stop-color="#ffb35c" stop-opacity=".22"/><stop offset="1" stop-color="#ffb35c" stop-opacity="0"/></radialGradient></defs>
+<rect width="1600" height="900" fill="url(#sky)"/><g fill="#e8e6ff"><circle cx="378" cy="31" r="1" opacity="0.40"/><circle cx="32" cy="148" r="0.8" opacity="0.48"/><circle cx="859" cy="65" r="0.8" opacity="0.51"/><circle cx="1509" cy="9" r="1.2" opacity="0.83"/><circle cx="309" cy="113" r="1.2" opacity="0.40"/><circle cx="969" cy="222" r="1" opacity="0.50"/><circle cx="448" cy="395" r="1.2" opacity="0.35"/><circle cx="467" cy="194" r="1" opacity="0.60"/><circle cx="958" cy="101" r="1.2" opacity="0.51"/><circle cx="1276" cy="26" r="1.2" opacity="0.66"/><circle cx="1037" cy="160" r="1" opacity="0.39"/><circle cx="1462" cy="198" r="1" opacity="0.56"/><circle cx="1195" cy="111" r="1.2" opacity="0.41"/><circle cx="99" cy="92" r="1" opacity="0.42"/><circle cx="1495" cy="57" r="1.2" opacity="0.77"/><circle cx="1433" cy="377" r="1.2" opacity="0.36"/><circle cx="462" cy="393" r="1.6" opacity="0.87"/><circle cx="1391" cy="143" r="1" opacity="0.89"/><circle cx="467" cy="89" r="1" opacity="0.55"/><circle cx="15" cy="11" r="1.2" opacity="0.95"/><circle cx="914" cy="108" r="1" opacity="0.42"/><circle cx="100" cy="262" r="1" opacity="0.71"/><circle cx="874" cy="162" r="0.8" opacity="0.42"/><circle cx="847" cy="235" r="1" opacity="0.64"/><circle cx="387" cy="81" r="1.6" opacity="0.62"/><circle cx="1036" cy="106" r="1" opacity="0.37"/><circle cx="407" cy="60" r="1" opacity="0.60"/><circle cx="419" cy="143" r="1.2" opacity="0.69"/><circle cx="1585" cy="178" r="0.8" opacity="0.65"/><circle cx="149" cy="92" r="1" opacity="0.55"/><circle cx="1051" cy="295" r="1.6" opacity="0.67"/><circle cx="1048" cy="181" r="1.6" opacity="0.92"/><circle cx="119" cy="446" r="1" opacity="0.38"/><circle cx="1438" cy="59" r="0.8" opacity="0.87"/><circle cx="1101" cy="149" r="1.6" opacity="0.91"/><circle cx="350" cy="1" r="0.8" opacity="0.72"/><circle cx="412" cy="160" r="1.6" opacity="0.88"/><circle cx="881" cy="215" r="1.2" opacity="0.84"/><circle cx="900" cy="350" r="1.6" opacity="0.37"/><circle cx="55" cy="194" r="1.2" opacity="0.71"/><circle cx="222" cy="147" r="0.8" opacity="0.53"/><circle cx="555" cy="34" r="1.6" opacity="0.58"/><circle cx="1260" cy="79" r="1.6" opacity="0.86"/><circle cx="640" cy="34" r="1.2" opacity="0.66"/><circle cx="694" cy="349" r="0.8" opacity="0.73"/><circle cx="1505" cy="287" r="1.6" opacity="0.60"/><circle cx="1277" cy="73" r="1" opacity="0.77"/><circle cx="522" cy="224" r="0.8" opacity="0.78"/><circle cx="9" cy="107" r="1.6" opacity="0.82"/><circle cx="962" cy="176" r="1.6" opacity="0.86"/><circle cx="571" cy="357" r="0.8" opacity="0.76"/><circle cx="975" cy="140" r="1.6" opacity="0.82"/><circle cx="909" cy="310" r="1.6" opacity="0.72"/><circle cx="707" cy="57" r="1.2" opacity="0.94"/><circle cx="544" cy="155" r="1" opacity="0.52"/><circle cx="1503" cy="81" r="0.8" opacity="0.40"/><circle cx="1033" cy="254" r="1.2" opacity="0.55"/><circle cx="481" cy="4" r="0.8" opacity="0.83"/><circle cx="1292" cy="222" r="1.6" opacity="0.75"/><circle cx="1588" cy="35" r="0.8" opacity="0.45"/><circle cx="767" cy="222" r="1.2" opacity="0.86"/><circle cx="1100" cy="225" r="1.6" opacity="0.77"/><circle cx="495" cy="65" r="1.6" opacity="0.89"/><circle cx="640" cy="168" r="1.2" opacity="0.61"/><circle cx="941" cy="111" r="1.6" opacity="0.77"/><circle cx="984" cy="166" r="0.8" opacity="0.44"/><circle cx="108" cy="454" r="1.2" opacity="0.71"/><circle cx="500" cy="24" r="1" opacity="0.73"/><circle cx="763" cy="125" r="1" opacity="0.39"/><circle cx="212" cy="14" r="1.2" opacity="0.36"/></g>
+<circle cx="1240" cy="170" r="150" fill="url(#moonglow)"/><circle cx="1240" cy="170" r="34" fill="#e9e4d6"/>
+<g fill="#161326"><polygon points="560,566 566,536 640,530 642,540 600,546 598,566"/><polygon points="690,566 703,470 741,474 737,498 749,502 743,566"/><polygon points="780,566 786,428 813,426 819,451 807,454 813,566"/><polygon points="852,566 872,486 903,493 886,566"/><polygon points="930,566 933,508 958,506 961,522 952,524 962,566"/><rect x="988" y="548" width="44" height="18"/></g>
+<polygon fill="#0e0b09" points="0,587 103,545 289,583 465,560 582,581 727,565 866,589 1029,546 1209,578 1307,556 1397,589 1582,553 1719,581 1600,900 0,900"/><polygon fill="#15110e" points="103,545 289,583 168,645"/><polygon fill="#15110e" points="465,560 582,581 506,614"/><polygon fill="#15110e" points="727,565 866,589 776,627"/><polygon fill="#15110e" points="1029,546 1209,578 1092,631"/><polygon fill="#15110e" points="1307,556 1397,589 1338,642"/><polygon fill="#15110e" points="1582,553 1719,581 1630,625"/>
+<polygon fill="#0f0c0a" points="0,692 312,648 622,699 770,647 923,689 1212,642 1484,694 1744,653 1600,900 0,900"/><polygon fill="#1b1511" points="312,648 622,699 421,780"/><polygon fill="#1b1511" points="770,647 923,689 823,756"/><polygon fill="#1b1511" points="1212,642 1484,694 1308,778"/>
+<polygon fill="#090706" points="0,820 316,731 730,845 1089,745 1522,825 1962,786 1600,900 0,900"/><polygon fill="#211913" points="316,731 730,845 461,900"/><polygon fill="#211913" points="1089,745 1522,825 1240,900"/>
+<rect width="1600" height="900" fill="url(#lamp)"/></svg>
+  <canvas id="dream" aria-hidden="true"></canvas>
+</div>
+<header class="sign">
+  <h1>Lawrence Feng</h1>
+  <p>Software engineer</p>
+</header>
+<div id="crosshair" aria-hidden="true"></div>
+<div class="stick" id="stick" aria-hidden="true"><i></i></div>
+<div class="move-zone" aria-hidden="true"><span>move</span></div>
+<p id="prompt" aria-live="polite"></p>
+
+<div class="corner">
+<details id="help" name="corner">
+  <summary aria-label="How to explore">?</summary>
+  <div class="panel help">
+    <h2>How to explore</h2>
+    <ol class="steps">
+  <li>
+    <svg viewBox="0 0 64 40" aria-hidden="true" class="only-mouse"><rect x="24" y="6" width="16" height="26" rx="8"/><path d="M32 6v9"/><path d="M14 19H4m0 0l4-4m-4 4l4 4M50 19h10m0 0l-4-4m4 4l-4 4"/></svg>
+    <svg viewBox="0 0 64 40" aria-hidden="true" class="only-touch"><rect x="18" y="3" width="28" height="34" rx="3"/><path d="M32 3v34" stroke-dasharray="2 2"/><path d="M36 20h7m0 0l-3-3m3 3l-3 3"/><circle cx="39" cy="28" r="2.5" class="fill"/></svg>
+    <p><b>Look around.</b> <span class="only-mouse">Click the desert to walk in, then move the mouse. <kbd>Esc</kbd> lets go.</span><span class="only-touch">Drag anywhere on the right side of the screen.</span></p>
+  </li>
+  <li>
+    <svg viewBox="0 0 64 40" aria-hidden="true" class="only-mouse"><rect x="25" y="4" width="14" height="14" rx="2"/><rect x="9" y="21" width="14" height="14" rx="2"/><rect x="25" y="21" width="14" height="14" rx="2"/><rect x="41" y="21" width="14" height="14" rx="2"/><text x="32" y="14.5">W</text><text x="16" y="31.5">A</text><text x="32" y="31.5">S</text><text x="48" y="31.5">D</text></svg>
+    <svg viewBox="0 0 64 40" aria-hidden="true" class="only-touch"><rect x="18" y="3" width="28" height="34" rx="3"/><circle cx="25" cy="27" r="5.5"/><circle cx="25" cy="24" r="2.5" class="fill"/><path d="M25 12v-4m0 0l-2 2m2-2l2 2"/></svg>
+    <p><b>Walk.</b> <span class="only-mouse"><kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd> or the arrow keys. Hold <kbd>Shift</kbd> to run.</span><span class="only-touch">Put your left thumb down and push it the way you want to go.</span></p>
+  </li>
+  <li>
+    <svg viewBox="0 0 64 40" aria-hidden="true"><path d="M2 32c10-4 20-4 30-2s20 2 30-2"/><ellipse cx="32" cy="30" rx="11" ry="4" class="glow"/><circle cx="28" cy="29" r="1" class="fill"/><circle cx="35" cy="31" r="1" class="fill"/><circle cx="31" cy="27.5" r=".8" class="fill"/><path d="M14 14h36m-36 0l4-4m-4 4l4 4m32-4l-4-4m4 4l-4 4"/></svg>
+    <p><b>Dig.</b> Find sand that glitters. Aim your light at it and <em>sweep it back and forth</em> across the spot. The bar under the screen fills as the sand gives way.</p>
+  </li>
+  <li>
+    <svg viewBox="0 0 64 40" aria-hidden="true"><path d="M32 6l7 9-7 9-7-9z" class="fill-soft"/><path d="M32 30v-4M24 33h16"/><path d="M46 24l6 10 2-5 5-1z" class="fill"/></svg>
+    <p><b>Look closer.</b> <span class="only-mouse">Click</span><span class="only-touch">Tap</span> whatever rises out of the sand.</p>
+  </li>
+</ol>
+<ul class="lore">
+  <li><span class="beam"></span><p><b>Golden beams</b> mark my projects and links. Walk towards them.</p></li>
+  <li><span class="glint"></span><p><b>Faint glints</b> hide the rest. Look in every direction, and dig longer.</p></li>
+  <li><span class="still"></span><p>At the hourglass, <b>stand still</b> and let the sand run out.</p></li>
+  <li><span class="map"></span><p>The <b>map</b> only draws what you have seen. <span class="only-mouse">Press <kbd>M</kbd> or click it</span><span class="only-touch">Tap it</span> to open the full map. The desert is huge, so walk far.</p></li>
+  <li><span class="storm"></span><p>The wind changes. <b>Sandstorms</b> pass, and they bury holes again.</p></li>
+</ul>
+
+    <h2>Sand</h2>
+    <div class="seg" role="group" aria-label="Sand">
+      <button type="button" data-sand="dense" aria-pressed="true">Dense &amp; dark</button>
+      <button type="button" data-sand="light" aria-pressed="false">Light &amp; glowing</button>
+    </div>
+  </div>
+</details>
+<details id="save-me" name="corner">
+  <summary>Save me</summary>
+  <div class="panel">
+    <nav id="relics" aria-label="Site">
+      <h2>Pages</h2>
+      <ul>
+        <li><a href="https://lawrnsfeng.github.io/projects" data-find="projects">Projects<small>Things I've built</small></a></li>
+        <li><a href="https://lawrnsfeng.github.io/about" data-find="about">About<small>Who I am</small></a></li>
+        <li><a href="https://lawrnsfeng.github.io/blog" data-find="writing">Writing<small>Notes and essays</small></a></li>
+        <li><a href="https://lawrnsfeng.github.io/resume" data-find="resume">Resume &amp; Contact<small>Experience, skills, email</small></a></li>
+      </ul>
+      <h2>Projects</h2>
+      <ul>
+        <li><a href="https://lawrnsfeng.github.io/projects/wonder/" data-find="wonder">Wonder<small>A project called wonder.</small></a></li><li><a href="https://lawrnsfeng.github.io/projects/its-a-wonderful-game/" data-find="its-a-wonderful-game">It&#39;s a Wonderful Game<small>A game project.</small></a></li><li><a href="https://lawrnsfeng.github.io/projects/mint/" data-find="mint">Mint<small>A project called mint.</small></a></li><li><a href="https://lawrnsfeng.github.io/projects/pneuma/" data-find="pneuma">Pneuma<small>A project called pneuma.</small></a></li><li><a href="https://lawrnsfeng.github.io/projects/sprout/" data-find="sprout">Sprout<small>A project called sprout.</small></a></li>
+      </ul>
+      <h2>Links</h2>
+      <ul>
+        <li><a href="https://github.com/lawrnsfeng" rel="me noopener">GitHub<small>github.com/lawrnsfeng</small></a></li>
+        
+      </ul>
+    </nav>
+    <h2>Support</h2>
+    <a class="kofi" href="https://ko-fi.com/lawrnsfeng" rel="noopener" target="_blank"><svg class="cup" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 8h13v5a5 5 0 0 1-5 5H9a5 5 0 0 1-5-5z" fill="currentColor"/><path d="M17 10h1.5a2.5 2.5 0 0 1 0 5H17" fill="none" stroke="currentColor" stroke-width="2"/><path d="M9.5 11.5c0-1 1-1.5 1.5-.8.5-.7 1.5-.2 1.5.8 0 1.2-1.5 2-1.5 2s-1.5-.8-1.5-2z" fill="#0d0f1f"/></svg>Buy me a Ko-fi</a>
+        <h2>Hidden in the sand</h2>
+    <ul id="hidden">
+      <li data-hidden="a-dream"><span class="redacted" aria-label="Not found yet"><i style="width:1ch"></i><i style="width:5ch"></i></span><small>At the very edge of the world, due north</small></li><li data-hidden="a-journey"><span class="redacted" aria-label="Not found yet"><i style="width:1ch"></i><i style="width:7ch"></i></span><small>Past the narrow canyon, before the city carved in stone</small></li><li data-hidden="a-letter"><span class="redacted" aria-label="Not found yet"><i style="width:1ch"></i><i style="width:6ch"></i></span><small>Deep in the south-east</small></li><li data-hidden="a-memory"><span class="redacted" aria-label="Not found yet"><i style="width:1ch"></i><i style="width:6ch"></i></span><small>Far north, past the ruins</small></li><li data-hidden="a-mood"><span class="redacted" aria-label="Not found yet"><i style="width:1ch"></i><i style="width:4ch"></i></span><small>Where time runs out, for those who wait</small></li><li data-hidden="a-song"><span class="redacted" aria-label="Not found yet"><i style="width:1ch"></i><i style="width:4ch"></i></span><small>Behind the castle, facing the moon</small></li><li data-hidden="an-old-photo"><span class="redacted" aria-label="Not found yet"><i style="width:2ch"></i><i style="width:3ch"></i><i style="width:10ch"></i></span><small>Among the fallen columns of the catacombs</small></li>
+    </ul>
+    <h2>Found</h2>
+    <ul id="journal"></ul>
+  </div>
+</details>
+</div>
+<div id="dig" aria-hidden="true"><i></i></div>
+<canvas id="minimap" role="button" tabindex="0" aria-label="Open the map of explored desert (M)"></canvas>
+<div id="bigmap" hidden>
+  <div class="bigmap-card">
+    <canvas aria-label="Map of the desert you have explored"></canvas>
+    <div class="bigmap-bar"><span>Only what you have seen is drawn. <kbd>M</kbd> toggles.</span><button type="button" data-map="in" aria-label="Zoom in">+</button><button type="button" data-map="out" aria-label="Zoom out">−</button><button type="button" data-map="close">Close</button></div>
+  </div>
+</div>
+
+<dialog id="vision" aria-labelledby="vision-title"></dialog>
+<dialog id="welcome" aria-labelledby="welcome-title"><div class="card">
+<h2 id="welcome-title">Welcome to the sands</h2>
+<p>This is a desert you can walk through. My projects, links and a few memories are buried in it, waiting to be dug up.</p>
+<p class="how"><span class="only-mouse">Move with <kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd>, look with the mouse, and sweep your light over glittering sand.</span><span class="only-touch">Walk with your left thumb, look with your right, and sweep your light over glittering sand.</span></p>
+<div class="choices">
+<button type="button" class="explore" data-welcome="explore" autofocus>Explore the desert</button>
+<button type="button" class="save" data-welcome="save">Save me<small>just show me the links</small></button>
+</div>
+</div></dialog>
+
+
+
+
+<template id="find-a-dream"><div class="card"><button class="close" type="button" aria-label="Close">×</button>
+<p class="where">At the very edge of the world, due north</p><h2 id="vision-title">A dream</h2>
+<p><em>A dream you keep having.</em></p>
+
+
+</div></template>
+
+
+
+<template id="find-a-journey"><div class="card"><button class="close" type="button" aria-label="Close">×</button>
+<p class="where">Past the narrow canyon, before the city carved in stone</p><h2 id="vision-title">A journey</h2>
+<p><em>A journey that changed you. A place, a photo, what you learned.</em></p>
+
+
+</div></template>
+
+
+
+<template id="find-a-letter"><div class="card"><button class="close" type="button" aria-label="Close">×</button>
+<p class="where">Deep in the south-east</p><h2 id="vision-title">A letter</h2>
+<p><em>A letter you never sent.</em></p>
+
+
+</div></template>
+
+
+
+<template id="find-a-memory"><div class="card"><button class="close" type="button" aria-label="Close">×</button>
+<p class="where">Far north, past the ruins</p><h2 id="vision-title">A memory</h2>
+<p><em>A memory you want only the patient to find. Text, an image, anything.</em></p>
+
+
+</div></template>
+
+
+
+<template id="find-a-mood"><div class="card"><button class="close" type="button" aria-label="Close">×</button>
+<p class="where">Where time runs out, for those who wait</p><h2 id="vision-title">A mood</h2>
+<p><em>A feeling, a picture, a song you love, revealed only to those who wait.</em></p>
+
+
+</div></template>
+
+
+
+<template id="find-a-song"><div class="card"><button class="close" type="button" aria-label="Close">×</button>
+<p class="where">Behind the castle, facing the moon</p><h2 id="vision-title">A song</h2>
+<p><em>The song that was playing when…</em></p>
+
+
+</div></template>
+
+
+
+<template id="find-about"><div class="card"><button class="close" type="button" aria-label="Close">×</button>
+<p class="where">The Old Castle</p><h2 id="vision-title">About me</h2>
+<p><span class="ornament-wrap"><svg xmlns="http://www.w3.org/2000/svg" viewBox="-50 -50 100 100" class="ornament" role="img" aria-label="Ornament"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="miter"><path d="M0-46L13-13 46 0 13 13 0 46-13 13-46 0-13-13Z"/><path d="M-30-30H30V30H-30Z" transform="rotate(45)" opacity=".55"/><path d="M0-22L22 0 0 22-22 0Z"/></g><path d="M0-10L10 0 0 10-10 0Z" fill="#ffb35c"/><circle r="2.5" fill="#0d0f1f"/></svg>
+</span></p>
+<p>The castle is the oldest thing out here, and so is this: <em>a few lines about who you are.</em></p>
+
+<a class="go" href="https://lawrnsfeng.github.io/about/">Open About me →</a>
+</div></template>
+
+
+
+<template id="find-an-old-photo"><div class="card"><button class="close" type="button" aria-label="Close">×</button>
+<p class="where">Among the fallen columns of the catacombs</p><h2 id="vision-title">An old photograph</h2>
+<p><em>An old photograph, and the story behind it.</em></p>
+
+
+</div></template>
+
+
+
+<template id="find-first-light"><div class="card"><button class="close" type="button" aria-label="Close">×</button>
+<p class="where">Where you woke</p><h2 id="vision-title">First light</h2>
+<p><span class="ornament-wrap"><svg xmlns="http://www.w3.org/2000/svg" viewBox="-50 -50 100 100" class="ornament" role="img" aria-label="Ornament"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="miter"><path d="M0-46L13-13 46 0 13 13 0 46-13 13-46 0-13-13Z"/><path d="M-30-30H30V30H-30Z" transform="rotate(45)" opacity=".55"/><path d="M0-22L22 0 0 22-22 0Z"/></g><path d="M0-10L10 0 0 10-10 0Z" fill="#ffb35c"/><circle r="2.5" fill="#0d0f1f"/></svg>
+</span></p>
+<p>You found your first thing. Everything in this desert is buried like this. Sweep your light across the sand and see what it gives back.</p>
+<p><strong>Golden beams</strong> mark my projects and links. Other things only glint faintly, and only for those who look in every direction.</p>
+
+
+</div></template>
+
+
+
+<template id="find-github"><div class="card"><button class="close" type="button" aria-label="Close">×</button>
+<p class="where">Near where you woke</p><h2 id="vision-title">GitHub</h2>
+<p>Everything public lives on GitHub: <a rel="external" href="https://github.com/lawrnsfeng">github.com/lawrnsfeng</a>.</p>
+
+<a class="go" href="https://github.com/lawrnsfeng" rel="noopener" target="_blank">Visit GitHub ↗</a>
+</div></template>
+
+
+
+<template id="find-its-a-wonderful-game"><div class="card"><button class="close" type="button" aria-label="Close">×</button>
+<p class="where">North-west dunes</p><h2 id="vision-title">It&#39;s a Wonderful Game</h2>
+<p><strong>It’s a Wonderful Game</strong>: <em>one-line description goes here.</em></p>
+
+<a class="go" href="https://lawrnsfeng.github.io/projects/its-a-wonderful-game/">Open It&#39;s a Wonderful Game →</a>
+</div></template>
+
+
+
+<template id="find-kofi"><div class="card"><button class="close" type="button" aria-label="Close">×</button>
+<p class="where">A few steps from where you woke</p><h2 id="vision-title">Buy me a Ko-fi</h2>
+<p>Someone left a warm cup in the cold sand. If anything out here made you smile, you can <a rel="external" href="https://ko-fi.com/lawrnsfeng">buy me a Ko-fi</a> and keep the lantern burning.</p>
+
+<a class="go" href="https://ko-fi.com/lawrnsfeng" rel="noopener" target="_blank">Visit Buy me a Ko-fi ↗</a>
+</div></template>
+
+
+
+<template id="find-mint"><div class="card"><button class="close" type="button" aria-label="Close">×</button>
+<p class="where">South-east dunes</p><h2 id="vision-title">Mint</h2>
+<p><strong>mint</strong>: <em>one-line description goes here.</em></p>
+
+<a class="go" href="https://lawrnsfeng.github.io/projects/mint/">Open Mint →</a>
+</div></template>
+
+
+
+<template id="find-pneuma"><div class="card"><button class="close" type="button" aria-label="Close">×</button>
+<p class="where">South-west dunes</p><h2 id="vision-title">Pneuma</h2>
+<p><strong>pneuma</strong>: <em>one-line description goes here.</em></p>
+
+<a class="go" href="https://lawrnsfeng.github.io/projects/pneuma/">Open Pneuma →</a>
+</div></template>
+
+
+
+<template id="find-projects"><div class="card"><button class="close" type="button" aria-label="Close">×</button>
+<p class="where">The Ruins</p><h2 id="vision-title">Projects</h2>
+<p>The ruins are where I keep what I have built. More of it lies scattered across the dunes.</p>
+
+<a class="go" href="https://lawrnsfeng.github.io/projects/">Open Projects →</a>
+</div></template>
+
+
+
+<template id="find-resume"><div class="card"><button class="close" type="button" aria-label="Close">×</button>
+<p class="where">The Sand of Time</p><h2 id="vision-title">Resume &amp; Contact</h2>
+<p>Stand still long enough and the sand of time runs down. <em>A short summary of your path goes here.</em></p>
+
+<a class="go" href="https://lawrnsfeng.github.io/resume/">Open Resume &amp; Contact →</a>
+</div></template>
+
+
+
+<template id="find-sprout"><div class="card"><button class="close" type="button" aria-label="Close">×</button>
+<p class="where">On the road east</p><h2 id="vision-title">Sprout</h2>
+<p><strong>sprout</strong>: <em>one-line description goes here.</em></p>
+
+<a class="go" href="https://lawrnsfeng.github.io/projects/sprout/">Open Sprout →</a>
+</div></template>
+
+
+
+<template id="find-wonder"><div class="card"><button class="close" type="button" aria-label="Close">×</button>
+<p class="where">North-east dunes</p><h2 id="vision-title">Wonder</h2>
+<p><strong>wonder</strong>: <em>one-line description goes here.</em></p>
+
+<a class="go" href="https://lawrnsfeng.github.io/projects/wonder/">Open Wonder →</a>
+</div></template>
+
+
+
+<template id="find-writing"><div class="card"><button class="close" type="button" aria-label="Close">×</button>
+<p class="where">The Catacombs</p><h2 id="vision-title">Writing</h2>
+<p>The catacombs keep what I have written down.</p>
+
+<a class="go" href="https://lawrnsfeng.github.io/blog/">Open Writing →</a>
+</div></template>
+
+
+<script type="application/json" id="world">{"places":[{"slug":"ruins","name":"The Ruins","kind":"ruins","x":0,"z":-70,"seed":7},{"slug":"castle","name":"The Old Castle","kind":"castle","x":190,"z":-10,"seed":11},{"slug":"hourglass","name":"The Sand of Time","kind":"hourglass","x":-170,"z":20,"seed":3},{"slug":"catacombs","name":"The Catacombs","kind":"catacombs","x":20,"z":260,"seed":5},{"slug":"petra","name":"The Rose City","kind":"petra","x":-240,"z":150,"seed":13}],
+"finds":[{"slug":"a-dream","title":"A dream","place":"spawn","x":-30,"z":-280,"reveal":"dig","effort":6,"form":"star","vis":"hidden"},{"slug":"a-journey","title":"A journey","place":"petra","x":4,"z":6,"reveal":"dig","effort":5,"form":"urn","vis":"hidden"},{"slug":"a-letter","title":"A letter","place":"spawn","x":130,"z":150,"reveal":"dig","effort":6,"form":"tablet","vis":"hidden"},{"slug":"a-memory","title":"A memory","place":"spawn","x":-60,"z":-150,"reveal":"dig","effort":5,"form":"urn","vis":"hidden"},{"slug":"a-mood","title":"A mood","place":"hourglass","x":12,"z":-4,"reveal":"stillness","effort":12,"form":"sigil","vis":"hidden"},{"slug":"a-song","title":"A song","place":"castle","x":50,"z":-60,"reveal":"dig","effort":5,"form":"crystal","vis":"hidden"},{"slug":"about","title":"About me","place":"castle","x":-22,"z":0,"reveal":"dig","effort":2,"form":"sigil","vis":"open"},{"slug":"an-old-photo","title":"An old photograph","place":"catacombs","x":-14,"z":-4,"reveal":"dig","effort":7,"form":"cube","vis":"hidden"},{"slug":"first-light","title":"First light","place":"spawn","x":0,"z":-7,"reveal":"dig","effort":1,"form":"tablet","vis":"tutorial"},{"slug":"github","title":"GitHub","place":"spawn","x":-22,"z":12,"reveal":"dig","effort":1,"form":"sigil","vis":"open"},{"slug":"its-a-wonderful-game","title":"It's a Wonderful Game","place":"spawn","x":-52,"z":-26,"reveal":"dig","effort":1,"form":"cube","vis":"open"},{"slug":"kofi","title":"Buy me a Ko-fi","place":"spawn","x":16,"z":9,"reveal":"dig","effort":1,"form":"cup","vis":"open"},{"slug":"mint","title":"Mint","place":"spawn","x":38,"z":44,"reveal":"dig","effort":1,"form":"crystal","vis":"open"},{"slug":"pneuma","title":"Pneuma","place":"spawn","x":-44,"z":50,"reveal":"dig","effort":1,"form":"urn","vis":"open"},{"slug":"projects","title":"Projects","place":"ruins","x":0,"z":14,"reveal":"dig","effort":1,"form":"obelisk","vis":"open"},{"slug":"resume","title":"Resume & Contact","place":"hourglass","x":0,"z":10,"reveal":"stillness","effort":4,"form":"hourglass","vis":"open"},{"slug":"sprout","title":"Sprout","place":"spawn","x":72,"z":6,"reveal":"dig","effort":1,"form":"seedling","vis":"open"},{"slug":"wonder","title":"Wonder","place":"spawn","x":46,"z":-38,"reveal":"dig","effort":1,"form":"star","vis":"open"},{"slug":"writing","title":"Writing","place":"catacombs","x":0,"z":-12,"reveal":"dig","effort":2,"form":"tablet","vis":"open"}]}</script>
+
+<script type="module">
+const calm = matchMedia("(prefers-reduced-motion: reduce)").matches || (navigator.connection && navigator.connection.saveData);
+const wake = () => import("https://lawrnsfeng.github.io/dream/dream.js").then(m => m.default()).catch(e => { console.warn(e); document.body.classList.add("dream-off"); });
+if (!calm) addEventListener("load", () => (self.requestIdleCallback || setTimeout)(wake, { timeout: 1500 }));
+</script>
+</body>
+
+</html>
